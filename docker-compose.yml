@@ -1,0 +1,22 @@
+version: '2.2'
+services:
+  db:
+    image: postgres:alpine
+    container_name: db
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+        POSTGRES_PASSWORD: admin
+        POSTGRES_DB: mercadolibre
+    ports:
+        - 5432:5432
+
+  items:
+    depends_on:
+    - db
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports: 
+      - 8080:8080
