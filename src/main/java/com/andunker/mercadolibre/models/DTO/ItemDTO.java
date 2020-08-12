@@ -20,7 +20,7 @@ public class ItemDTO {
         return id;
     }
 
-    @JsonProperty("id")
+    @JsonProperty("item_id")
     public void setId(String id) {
         this.id = id;
     }
