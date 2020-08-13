@@ -1,0 +1,72 @@
+version: '2.2'
+services:
+  db:
+    image: postgres:alpine
+    container_name: db
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+        POSTGRES_PASSWORD: admin
+        POSTGRES_DB: mercadolibre
+    ports:
+        - 5432:5432
+
+  items:
+    depends_on:
+    - db
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports: 
+      - 8080:8080
+
+  kibana:
+    container_name: kibana-container
+    hostname: kibana
+    image: docker.io/kibana:7.2.1
+    #volumes:
+    #  - ./kibana.yml:/usr/share/kibana/kibana.yml
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports: ['5601:5601']
+    # depends_on: ["elasticsearch"]
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "http://localhost:5601/"]
+      retries: 6
+
+  elasticsearch:
+    container_name: elasticsearch-container
+    image: docker.io/elasticsearch:7.2.1
+    environment:
+            discovery.type: single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    healthcheck:
+      test: ["CMD", "curl","-s" ,"-f", "http://localhost:9200/_cat/health"]
+
+  apm-server:
+    container_name: apm-server-container
+    image: store/elastic/apm-server:7.2.1
+    user: apm-server
+    ports:
+      - "7200:7200"
+    depends_on: ["elasticsearch", "kibana"]
+    volumes:
+      - ./apm-server.yml:/usr/share/apm-server/apm-server.yml
+    command: /usr/share/apm-server/apm-server -e -c /usr/share/apm-server/apm-server.yml -E apm-server.host=apm-server:7200 --strict.perms=false
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-f", "http://localhost:7200/polls"]
+      retries: 6
+
+volumes:
+  esdata:
+    driver: local
