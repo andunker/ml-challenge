@@ -3,6 +3,7 @@ package com.andunker.mercadolibre.controllers;
 import com.andunker.mercadolibre.models.DTO.Health;
 import com.andunker.mercadolibre.models.DTO.ItemDTO;
 import com.andunker.mercadolibre.services.IItemService;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/")
 public class ItemController {
+
+    final static Logger logger = Logger.getLogger(ItemController.class);
 
     private final IItemService itemService;
 
@@ -26,6 +29,7 @@ public class ItemController {
             return	itemService.findItemById(id);
         }
         catch (Exception e){
+            logger.error("This is error : " + e);
             return null;
         }
     }
@@ -37,6 +41,7 @@ public class ItemController {
             return	itemService.getHealth();
         }
         catch (Exception e){
+            logger.error("This is error : " + e);
             return null;
         }
 

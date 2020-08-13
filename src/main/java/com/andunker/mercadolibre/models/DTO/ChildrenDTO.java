@@ -1,5 +1,6 @@
 package com.andunker.mercadolibre.models.DTO;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -11,7 +12,7 @@ public class ChildrenDTO {
         return id;
     }
 
-    @JsonProperty("item_id")
+    @JsonAlias({ "item_id", "id" })
     public void setId(String id) {
         this.id = id;
     }

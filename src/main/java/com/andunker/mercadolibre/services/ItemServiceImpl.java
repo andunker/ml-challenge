@@ -43,18 +43,12 @@ public class ItemServiceImpl implements IItemService {
         String itemUri = "items/" + id;
         String childrenUri =  "items/" + id + "/children";
 
-
         itemDTO = restTemplate.getForObject(server + itemUri, ItemDTO.class);
         ChildrenDTO[] childrens = restTemplate.getForObject(server + childrenUri, ChildrenDTO[].class);
 
         itemDTO.setChildrens(Arrays.asList(childrens));
 
-
-        ///
-
         Item item = new Item();
-
-
         String jsonStrItem = Obj.writeValueAsString(itemDTO);
 
         item.setId(id);
@@ -64,15 +58,12 @@ public class ItemServiceImpl implements IItemService {
 
         itemDAO.save(item);
 
-
-
-        ///
-
         return itemDTO;
     }
 
     @Override
     public List<Health> getHealth() {
-        return null;
+        List<Health> healths = new ArrayList<>();
+        return healths;
     }
 }
