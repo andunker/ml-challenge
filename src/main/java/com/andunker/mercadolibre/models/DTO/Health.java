@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Health {
 
-    private Date date;
+    private String date;
     private int avgResponseTime;
     private int totalRequest;
     private int avgResponseTimeApiCalls;
@@ -15,12 +15,12 @@ public class Health {
     private List<InfoRequest> infoRequests;
 
     @JsonProperty("date")
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
     @JsonProperty("date")
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

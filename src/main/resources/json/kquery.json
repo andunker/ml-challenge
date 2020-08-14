@@ -1,0 +1,69 @@
+{
+  "aggs": {
+    "range": {
+      "date_range": {
+        "field": "@timestamp",
+        "format": "dd-MM-yyyy hh-mm",
+        "ranges": [
+          {
+            "from": "now-3m",
+            "to": "now-2m"
+          },
+          {
+            "from": "now-2m",
+            "to": "now-1m"
+          },
+          {
+            "from": "now-1m",
+            "to": "now"
+          }
+        ]
+      },
+      "aggs": {
+        "avg_respnse_time": {
+          "avg": {
+            "field": "transaction.duration.us"
+          }
+        },
+        "ext": {
+          "filter": {
+            "term": {
+              "span.type": "external"
+            }
+          },
+          "aggs": {
+            "avg_respnse_time_api_calls": {
+              "avg": {
+                "field": "span.duration.us"
+              }
+            }
+          }
+        },
+        "info_requests": {
+          "range": {
+            "field": "http.response.status_code",
+            "ranges": [
+              {
+                "from": 200,
+                "to": 299
+              },
+              {
+                "from": 300,
+                "to": 399
+              },
+              {
+                "from": 400,
+                "to": 499
+              },
+              {
+                "from": 500,
+                "to": 599
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "size": 0
+}
