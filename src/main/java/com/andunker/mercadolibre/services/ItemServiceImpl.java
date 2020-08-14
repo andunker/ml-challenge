@@ -12,6 +12,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -30,9 +34,14 @@ public class ItemServiceImpl implements IItemService {
     private static JsonParser jsonParser = new JsonParser();
     RestTemplate restTemplate = new RestTemplate();
     ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
     private IItemDao itemDAO;
     private String server = "https://api.mercadolibre.com/";
+
+    @Autowired
+    private ResourceLoader resourceLoader;
+
 
     @Override
     @Transactional
@@ -74,7 +83,9 @@ public class ItemServiceImpl implements IItemService {
     public List<Health> getHealth() throws IOException {
         List<Health> healths = new ArrayList<>();
 
-        File file = ResourceUtils.getFile("classpath:json/kquery.json");
+        Resource resource = resourceLoader.getResource("classpath:kquery.json");
+        InputStream file = resource.getInputStream();
+
         JsonNode body = mapper.readTree(file);
 
         HttpHeaders headers = new HttpHeaders();
