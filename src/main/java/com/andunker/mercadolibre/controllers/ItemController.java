@@ -3,7 +3,9 @@ package com.andunker.mercadolibre.controllers;
 import com.andunker.mercadolibre.models.DTO.Health;
 import com.andunker.mercadolibre.models.DTO.ItemDTO;
 import com.andunker.mercadolibre.services.IItemService;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +17,7 @@ import java.util.List;
 @RequestMapping("/")
 public class ItemController {
 
-    final static Logger logger = Logger.getLogger(ItemController.class);
+   Logger logger = LoggerFactory.getLogger(ItemController.class.getName());
 
     private final IItemService itemService;
 

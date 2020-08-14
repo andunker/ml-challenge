@@ -1,7 +1,28 @@
+# Description
+
+This is the mvp for Mercadolibre test,  this service can continue to improve
+-for full monitoring service go to apm in kibana
+-in this version the chache not expired
+
+## components to deploy
+items service,
+postgres db,
+kibana,
+elasticsearch,
+APMserver
+
+this servi
+
+## Run
+./start.bat
+
+## Stop
+/.stop.bat
+
 View swagger for use the API, enjoy
 
 ## swagger 
-http://localhost:8080/swagger-ui.html#/
+http://localhost:8081/swagger-ui.html#/
 
 ## kibana apm dashboard
 http://localhost:5601/app/kibana
