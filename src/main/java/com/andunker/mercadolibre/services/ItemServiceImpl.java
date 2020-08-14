@@ -13,6 +13,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpEntity;
@@ -37,7 +38,12 @@ public class ItemServiceImpl implements IItemService {
 
     @Autowired
     private IItemDao itemDAO;
-    private String server = "https://api.mercadolibre.com/";
+
+    @Value("${ml.ext.api}")
+    private String mlExternalApi;
+
+    @Value("${ml.elasticsearch.server}")
+    private String mlElasticsearchServer;
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -58,11 +64,11 @@ public class ItemServiceImpl implements IItemService {
         }
 
 
-        String itemUri = "items/" + id;
-        String childrenUri = "items/" + id + "/children";
+        String itemUri = "/items/" + id;
+        String childrenUri = "/items/" + id + "/children";
 
-        itemDTO = restTemplate.getForObject(server + itemUri, ItemDTO.class);
-        ChildrenDTO[] childrens = restTemplate.getForObject(server + childrenUri, ChildrenDTO[].class);
+        itemDTO = restTemplate.getForObject(mlExternalApi + itemUri, ItemDTO.class);
+        ChildrenDTO[] childrens = restTemplate.getForObject(mlExternalApi + childrenUri, ChildrenDTO[].class);
 
         itemDTO.setChildrens(Arrays.asList(childrens));
 
@@ -93,9 +99,8 @@ public class ItemServiceImpl implements IItemService {
 
         HttpEntity<String> entity = new HttpEntity(body, headers);
 
-        String fullApmResponse = restTemplate.postForEntity("http://localhost:9200/apm-7.2.1-*/_search?filter_path=aggregations.**&pretty", entity, String.class).getBody();
+        String fullApmResponse = restTemplate.postForEntity( mlElasticsearchServer + "/apm-7.2.1-transaction*/_search?filter_path=aggregations.**&pretty", entity, String.class).getBody();
 
-        //
         JsonElement apmResponse = jsonParser.parse(fullApmResponse)
                 .getAsJsonObject()
                 .get("aggregations")

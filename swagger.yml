@@ -1,0 +1,125 @@
+swagger: '2.0'
+info:
+  description: '"Spring Boot REST API for Online Store"'
+  version: 1.0.0
+  title: Spring Boot REST API
+  license:
+    name: Apache License Version 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0"
+host: localhost:8081
+basePath: "/"
+tags:
+- name: item-controller
+  description: Item Controller
+paths:
+  "/health":
+    get:
+      tags:
+      - item-controller
+      summary: getHealth
+      operationId: getHealthUsingGET
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              "$ref": "#/definitions/Health"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  "/items/{id}":
+    get:
+      tags:
+      - item-controller
+      summary: findItemById
+      operationId: findItemByIdUsingGET
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: id
+        required: true
+        type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            "$ref": "#/definitions/ItemDTO"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  ChildrenDTO:
+    type: object
+    properties:
+      item_id:
+        type: string
+      stop_time:
+        type: string
+        format: date-time
+    title: ChildrenDTO
+  Health:
+    type: object
+    properties:
+      avg_response_time:
+        type: integer
+        format: int32
+      avg_response_time_api_calls:
+        type: integer
+        format: int32
+      date:
+        type: string
+      info_requests:
+        type: array
+        items:
+          "$ref": "#/definitions/InfoRequest"
+      total_count_api_calls:
+        type: integer
+        format: int32
+      total_request:
+        type: integer
+        format: int32
+    title: Health
+  InfoRequest:
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int32
+      status_code:
+        type: integer
+        format: int32
+    title: InfoRequest
+  ItemDTO:
+    type: object
+    properties:
+      category_id:
+        type: string
+      children:
+        type: array
+        items:
+          "$ref": "#/definitions/ChildrenDTO"
+      item_id:
+        type: string
+      price:
+        type: integer
+        format: int32
+      start_time:
+        type: string
+        format: date-time
+      stop_time:
+        type: string
+        format: date-time
+      title:
+        type: string
+    title: ItemDTO
