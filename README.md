@@ -14,10 +14,12 @@ APMserver
 this servi
 
 ## Run
-./start.bat
+./start.bat (Windows)
+./start.sh (Linux or Mac)
 
 ## Stop
-/.stop.bat
+/.stop.bat (Windows)
+/.stop.sh (Linux or Mac)
 
 View swagger for use the API, enjoy
 
